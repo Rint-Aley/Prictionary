@@ -3,10 +3,21 @@ namespace Prictionary.Models;
 public class LanguageUnit
 {
     public int Id { get; set; }
+
     public required string Content { get; set; }
-    public string? Transcription { get; set; }
-    public List<Translation> Translations { get; } = [];
-    public List<LanguageUnitGroup> Groups { get; } = [];
-    public DateTime CreatedAt { get; set; }
-    public DateTime? DeletedAt { get; set; }
+
+    /// <summary>
+    /// Can be used for some additinoal info for language unit (such as transcription).
+    /// </summary>
+    public string? AdditionalInformation { get; set; }
+
+    public List<Meaning> Meanings { get; set; } = [];
+
+    public List<Group> Groups { get; set; } = [];
+
+    public List<LanguageUnitGroup> LanguageUnitGroups { get; set; } = [];
+
+    DateTime CreatedAt { get; set; }
+
+    DateTime LastModifiedAt { get; set; }
 }

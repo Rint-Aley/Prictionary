@@ -1,4 +1,5 @@
 ﻿using Asp.Versioning;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Prictionary.DTOs;
 
@@ -7,12 +8,14 @@ namespace Prictionary.ApiControllers;
 [ApiController]
 [ApiVersion("0")]
 [Route("api/v{apiVersion:apiVersion}/[controller]")]
+[Authorize]
 public class GroupsController : ControllerBase
 {
     [HttpPost]
     [MapToApiVersion("0")]
     public IActionResult PostGroup()
     {
+        
         return Ok();
     }
 

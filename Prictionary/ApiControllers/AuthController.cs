@@ -1,12 +1,16 @@
 ﻿using Asp.Versioning;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.VisualBasic;
 using Prictionary.Configuration;
+using Prictionary.DTOs;
 using Prictionary.Models;
 using Prictionary.Services;
-using Prictionary.DTOs;
+using Prictionary.Services.Infrastructure;
 using Prictionary.Services.Interfaces;
 using Prictionary.ViewModels;
+using System.Net;
 
 namespace Prictionary.ApiControllers;
 
@@ -15,17 +19,19 @@ namespace Prictionary.ApiControllers;
 [Route("api/v{apiVersion:apiVersion}/[controller]")]
 public class AuthController : ControllerBase
 {
+    private const string MismatchInIdentificationTypeMessage = "Provided authentication type is not supported by cofiguration of application.";
+
     private readonly SignInManager<AppUser> _signInManager;
     private readonly AuthPolicy _authPolicy;
-    private readonly IUsersService _usersService;
+    private readonly IUserAuthService _userAuthService;
 
     public AuthController(
         SignInManager<AppUser> signInManager,
-        IUsersService usersService,
+        IUserAuthService userAuthService,
         AuthPolicy authPolicy)
     {
         _signInManager = signInManager;
-        _usersService = usersService;
+        _userAuthService = userAuthService;
         _authPolicy = authPolicy;
     }
 
@@ -37,15 +43,15 @@ public class AuthController : ControllerBase
         {
             return BadRequest(ModelState);
         }
-        if (credentials.IdentificationType != _authPolicy.IdentificationType)
+        if (_authPolicy.RestrictIdentificationType && _authPolicy.IdentificationType != credentials.IdentificationType)
         {
-            return BadRequest();
+            return BadRequest(MismatchInIdentificationTypeMessage);
         }
 
-        var result = await _usersService.AuthenticateAsync(credentials);
+        var result = await _userAuthService.AuthenticateAsync(credentials);
         if (!result.Success)
         {
-            return BadRequest(result.Error);
+            return Unauthorized(result.Error);
         }
 
         var loginResponse = new LoginResponse
@@ -61,16 +67,21 @@ public class AuthController : ControllerBase
     [MapToApiVersion("0")]
     public async Task<IActionResult> RefreshToken()
     {
-        // validates refresh token
-        // checks if it is the latest 
-        // generates new access and refresh tokens
-        throw new NotImplementedException();
-    }
+        if (!Request.Cookies.TryGetValue(Constants.TokenConstants.REFRESH_TOKEN_COOKIE_NAME, out string? refreshToken))
+            return BadRequest("Refresh token is missing");
 
-    [HttpPost("signup")]
-    [MapToApiVersion("0")]
-    public async Task<IActionResult> SignUp()
-    {
-        return Unauthorized();
+        var result = await _userAuthService.AuthenticateByRefreshTokenAsync(refreshToken);
+        if (!result.Success)
+        {
+            return Unauthorized(result.Error);
+        }
+
+        var loginResponse = new LoginResponse
+        {
+            AccessToken = result.Value!.AccessToken,
+            RefreshToken = result.Value!.RefreshToken,
+        };
+        
+        return Ok(loginResponse);
     }
 }

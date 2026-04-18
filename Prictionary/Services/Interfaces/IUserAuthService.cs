@@ -9,11 +9,11 @@ public interface IUserAuthService
     /// Attempts log in based on provided credentials; If successful, returns access and refresh tokens; otherwise error message.
     /// </summary>
     /// <param name="credentials">Credentials of user.</param>
-    public Task<Result<AuthenticationResponse>> AuthenticateAsync(CredentialsForm credentials);
+    public Task<Result<AuthenticationResponse, string>> AuthenticateAsync(CredentialsForm credentials);
 
     /// <summary>
     /// Validates refresh token and issues a new pair of access and refresh tokens.
     /// </summary>
     /// <param name="refreshToken">Refresh token of user.</param>
-    public Task<Result<AuthenticationResponse>> AuthenticateByRefreshTokenAsync(string refreshToken);
+    public Task<Result<AuthenticationResponse, string>> AuthenticateByRefreshTokenAsync(string refreshToken);
 }

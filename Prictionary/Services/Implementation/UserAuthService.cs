@@ -30,7 +30,7 @@ public class UserAuthService : IUserAuthService
         _jwtService = jwtService;
     }
 
-    public async Task<Result<AuthenticationResponse>> AuthenticateAsync(CredentialsForm credentials)
+    public async Task<Result<AuthenticationResponse, string>> AuthenticateAsync(CredentialsForm credentials)
     {
         AppUser? user;
         switch (credentials.IdentificationType)
@@ -42,16 +42,16 @@ public class UserAuthService : IUserAuthService
                 user = await _userManager.FindByEmailAsync(credentials.Identifier);
                 break;
             default:
-                return new Result<AuthenticationResponse>(UnsupportedIdentificationType);
+                return new Result<AuthenticationResponse, string>(UnsupportedIdentificationType);
         }
         if (user is null)
         {
-            return new Result<AuthenticationResponse>(InvalidCredentials);
+            return new Result<AuthenticationResponse, string>(InvalidCredentials);
         }
         var passwordCheckResult = await _userManager.CheckPasswordAsync(user, credentials.Password);
         if (!passwordCheckResult)
         {
-            return new Result<AuthenticationResponse>(InvalidCredentials);
+            return new Result<AuthenticationResponse, string>(InvalidCredentials);
         }
 
         var (accessToken, refreshToken) = await _jwtService.GetAccessAndRefreshTokensAsync(user);
@@ -60,23 +60,23 @@ public class UserAuthService : IUserAuthService
             AccessToken = accessToken,
             RefreshToken = refreshToken 
         };
-        return new Result<AuthenticationResponse>(tokenResponse);
+        return new Result<AuthenticationResponse, string>(tokenResponse);
     }
 
-    public async Task<Result<AuthenticationResponse>> AuthenticateByRefreshTokenAsync(string refreshToken)
+    public async Task<Result<AuthenticationResponse, string>> AuthenticateByRefreshTokenAsync(string refreshToken)
     {
         var tokenResult = _jwtService.ExtractClaimsFromToken(refreshToken);
         if (!tokenResult.Success)
-            return new Result<AuthenticationResponse>(InvalidRefreshToken);
+            return new Result<AuthenticationResponse, string>(InvalidRefreshToken);
         var principal = tokenResult.Value!;
 
         string? userId = principal.Claims.FirstOrDefault(claim => claim.Type == ClaimsIdentity.DefaultNameClaimType)?.Value;
         if (userId is null)
-            return new Result<AuthenticationResponse>(InvalidRefreshToken);
+            return new Result<AuthenticationResponse, string>(InvalidRefreshToken);
 
         var user = await _userManager.FindByIdAsync(userId);
         if (user is null)
-            return new Result<AuthenticationResponse>(UserWithProvidedRefreshTokenWasntFound);
+            return new Result<AuthenticationResponse, string>(UserWithProvidedRefreshTokenWasntFound);
 
         (var accessToken, refreshToken) = await _jwtService.GetAccessAndRefreshTokensAsync(user);
         var tokenResponse = new AuthenticationResponse
@@ -84,6 +84,6 @@ public class UserAuthService : IUserAuthService
             AccessToken = accessToken,
             RefreshToken = refreshToken
         };
-        return new Result<AuthenticationResponse>(tokenResponse);
+        return new Result<AuthenticationResponse, string>(tokenResponse);
     }
 }

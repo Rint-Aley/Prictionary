@@ -1,16 +1,11 @@
 ﻿using Asp.Versioning;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
-using Microsoft.VisualBasic;
 using Prictionary.Configuration;
 using Prictionary.DTOs;
 using Prictionary.Models;
-using Prictionary.Services;
-using Prictionary.Services.Infrastructure;
 using Prictionary.Services.Interfaces;
-using Prictionary.ViewModels;
-using System.Net;
+using Prictionary.ViewModels.Responses;
 
 namespace Prictionary.ApiControllers;
 

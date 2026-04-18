@@ -1,4 +1,4 @@
-﻿namespace Prictionary.ViewModels;
+﻿namespace Prictionary.ViewModels.Responses;
 
 public class LoginResponse
 {

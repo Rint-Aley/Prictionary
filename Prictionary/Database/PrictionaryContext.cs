@@ -9,6 +9,8 @@ public class PrictionaryContext : IdentityDbContext<AppUser>
     public DbSet<LanguageUnit> LanguageUnits { get; set; }
     public DbSet<Meaning> Meanings { get; set; }
 
+    public DbSet<LanguageUnitGroup> LanguageUnitGroups { get; set; }
+
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         // optionsBuilder.UseNpgsql();
@@ -23,14 +25,14 @@ public class PrictionaryContext : IdentityDbContext<AppUser>
                 r => r
                     .HasOne(e => e.LanguageUnit)
                     .WithMany(e => e.LanguageUnitGroups)
-                    .HasForeignKey(lug => lug.LanguageUnitID),
+                    .HasForeignKey(lug => lug.LanguageUnitId),
                 l => l
                     .HasOne(e => e.Group)
                     .WithMany(e => e.LanguageUnitGroups)
-                    .HasForeignKey(lug => lug.GroupID),
+                    .HasForeignKey(lug => lug.GroupId),
                 languageUnitGroups =>
                 {
-                    languageUnitGroups.HasKey(lug => new { lug.GroupID, lug.LanguageUnitID });
+                    languageUnitGroups.HasKey(lug => new { lug.GroupId, lug.LanguageUnitId });
                     languageUnitGroups.ToTable("LanguageUnitGroups");
                 }
             );

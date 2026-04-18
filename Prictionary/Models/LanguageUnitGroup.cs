@@ -2,9 +2,9 @@ namespace Prictionary.Models;
 
 public class LanguageUnitGroup
 {
-    public int LanguageUnitID { get; set; }
+    public int LanguageUnitId { get; set; }
     public required LanguageUnit LanguageUnit { get; set; }
-    public int GroupID { get; set; }
+    public int GroupId { get; set; }
     public required Group Group { get; set; }
     public DateTime AddedAt { get; set; }
 

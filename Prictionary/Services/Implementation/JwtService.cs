@@ -70,7 +70,7 @@ public class JwtService : IJwtService
         return token;
     }
 
-    public Result<ClaimsPrincipal> ExtractClaimsFromToken(string token)
+    public Result<ClaimsPrincipal, string> ExtractClaimsFromToken(string token)
     {
         string configurationTokenKey = _secrets.JwtSecret;
         var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configurationTokenKey));
@@ -89,11 +89,11 @@ public class JwtService : IJwtService
         {
             ClaimsPrincipal principal =
                 new JwtSecurityTokenHandler().ValidateToken(token, validationParameters, out SecurityToken _);
-            return new Result<ClaimsPrincipal>(principal);
+            return new Result<ClaimsPrincipal, string>(principal);
         }
         catch (Exception ex)
         {
-            return new Result<ClaimsPrincipal>(ex.Message);
+            return new Result<ClaimsPrincipal, string>(ex.Message);
         }
     }
     private SigningCredentials GetSigningCredentials()

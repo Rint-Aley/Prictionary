@@ -28,5 +28,5 @@ public interface IJwtService
     /// Decrypts provided token and returns ClaimPrincipal encoded in it.
     /// </summary>
     /// <param name="token">JWT to be decrypted.</param>
-    public Result<ClaimsPrincipal> ExtractClaimsFromToken(string token);
+    public Result<ClaimsPrincipal, string> ExtractClaimsFromToken(string token);
 }

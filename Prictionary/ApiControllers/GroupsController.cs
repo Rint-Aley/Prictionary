@@ -14,7 +14,7 @@ namespace Prictionary.ApiControllers;
 
 [ApiController]
 [ApiVersion("0")]
-[Route("api/v{apiVersion:apiVersion}/[controller]")]
+[Route("api/v{apiVersion:apiVersion}/groups")]
 [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 public class GroupsController : ControllerBase
 {

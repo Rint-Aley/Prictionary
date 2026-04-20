@@ -3,7 +3,7 @@ using Prictionary.Database;
 using Prictionary.Models;
 using Prictionary.Repositories.Interfaces;
 
-namespace Prictionary.Repositories;
+namespace Prictionary.Repositories.Implementions;
 
 public class GroupsRepository : IGroupsRepository
 {

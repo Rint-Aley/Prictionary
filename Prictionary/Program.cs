@@ -4,30 +4,32 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Prictionary.Configuration;
 using Prictionary.Database;
+using Prictionary.Extensions;
 using Prictionary.Models;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
-
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddOpenApi();
 
+builder.Services
+    .AddPrictionaryConfiguration(builder.Configuration)
+    .AddPrictionaryServices();
+
+var connectionString = ConnectionStringBuilder.BuildPostgres();
+var secrets = new Secrets();
+builder.Configuration.GetSection(Secrets.Section).Bind(secrets);
+
 builder.Services.AddDbContext<PrictionaryContext>(optionsBuilder =>
 {
-    optionsBuilder.UseNpgsql(ConnectionStringBuilder.BuildPostgres());
+    optionsBuilder.UseNpgsql(connectionString);
 });
 
 builder.Services.AddIdentity<AppUser, IdentityRole>()
     .AddEntityFrameworkStores<PrictionaryContext>()
     .AddDefaultTokenProviders();
-//builder.Services.AddAuthentication(options =>
-//{
-//    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-//    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-//});
-
 builder.Services.AddAuthentication(options =>
     {
         options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -37,21 +39,13 @@ builder.Services.AddAuthentication(options =>
     {
         options.TokenValidationParameters = new TokenValidationParameters
         {
-            ValidateIssuer = true,
-            ValidateAudience = true,
             ValidateLifetime = true,
             ValidateIssuerSigningKey = true,
-            //ValidIssuer = jwtSettings["Issuer"],
-            //ValidAudience = jwtSettings["Audience"],
-            //IssuerSigningKey = new SymmetricSecurityKey(
-            //    Encoding.UTF8.GetBytes(jwtSettings["Key"])),
+            IssuerSigningKey = new SymmetricSecurityKey(
+                Encoding.UTF8.GetBytes(secrets.JwtSecret)),
             ClockSkew = TimeSpan.Zero
         };
     });
-
-
-builder.Services.Configure<AuthPolicy>(
-    builder.Configuration.GetSection(nameof(AuthPolicy)));
 
 var app = builder.Build();
 
@@ -64,5 +58,7 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
+
 app.MapControllers();
+
 app.Run();

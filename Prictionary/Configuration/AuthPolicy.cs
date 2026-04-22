@@ -1,7 +1,11 @@
-﻿namespace Prictionary.Configuration;
+﻿using System.Text.Json.Serialization;
+
+namespace Prictionary.Configuration;
 
 public class AuthPolicy
 {
+    public const string Section = "AuthPolicy";
+
     public UserManagement UserManagement { get; set; } = UserManagement.Manual;
     public bool RestrictIdentificationType { get; set; } = true;
     public IdentificationType IdentificationType { get; set; } = IdentificationType.login;

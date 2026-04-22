@@ -2,6 +2,8 @@
 
 public class StartupConfiguration
 {
+    public const string Section = "StartupConfiguration";
+
     public AdminUserCredentials AdminUserCredentials { get; set; } = new AdminUserCredentials();
 }
 

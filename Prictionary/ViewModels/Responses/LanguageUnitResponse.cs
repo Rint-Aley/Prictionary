@@ -1,6 +1,6 @@
 ﻿namespace Prictionary.ViewModels.Responses;
 
-public class LanguageUnitResponse
+public record LanguageUnitResponse
 {
     public int Id { get; set; }
 

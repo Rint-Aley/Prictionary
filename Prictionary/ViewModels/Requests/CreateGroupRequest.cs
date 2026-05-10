@@ -2,7 +2,7 @@
 
 namespace Prictionary.ViewModels.Requests;
 
-public class CreateGroupRequest
+public record CreateGroupRequest
 {
     [Required]
     public required string Name { get; set; }

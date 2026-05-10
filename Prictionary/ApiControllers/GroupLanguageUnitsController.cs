@@ -55,7 +55,7 @@ public class GroupLanguageUnitsController : ControllerBase
         var group = await _groupsRepository.GetByIdAsync(groupId);
         if (group is null)
             return NotFound(string.Format(GroupWasNotFoundMessage, groupId));
-        if (!_groupAccessChecker.CanChange(group, user.Id))
+        if (!await _groupAccessChecker.CanChangeAsync(group, user.Id))
             return StatusCode(405);
 
         var languageUnit = new LanguageUnit
@@ -81,13 +81,13 @@ public class GroupLanguageUnitsController : ControllerBase
         var group = await _groupsRepository.GetByIdAsync(groupId);
         if (group is null)
             return NotFound(string.Format(GroupWasNotFoundMessage, groupId));
-        if (!_groupAccessChecker.CanChange(group, user.Id))
+        if (!await _groupAccessChecker.CanChangeAsync(group, user.Id))
             return StatusCode(405);
 
         var languageUnit = await _languageUnitsRepository.GetByIdAsync(languageUnitId);
         if (languageUnit is null)
             return NotFound(string.Format(LanguageUnitWasNotFoundMessage, groupId));
-        if (!_languageUnitAccessChecker.CanRead(languageUnit, user.Id))
+        if (!await _languageUnitAccessChecker.CanReadAsync(languageUnit, user.Id))
             return StatusCode(405);
 
         await _groupLanguageUnitReferencesRepository.CreateAsync(group.Id, languageUnit.Id);
@@ -107,13 +107,13 @@ public class GroupLanguageUnitsController : ControllerBase
         var group = await _groupsRepository.GetByIdAsync(groupId);
         if (group is null)
             return NotFound(string.Format(GroupWasNotFoundMessage, groupId));
-        if (!_groupAccessChecker.CanChange(group, user.Id))
+        if (!await _groupAccessChecker.CanChangeAsync(group, user.Id))
             return StatusCode(405);
 
         var languageUnit = await _languageUnitsRepository.GetByIdAsync(languageUnitId);
         if (languageUnit is null)
             return NotFound(string.Format(LanguageUnitWasNotFoundMessage, groupId));
-        if (!_languageUnitAccessChecker.CanRead(languageUnit, user.Id))
+        if (!await _languageUnitAccessChecker.CanReadAsync(languageUnit, user.Id))
             return StatusCode(405);
 
         await _groupLanguageUnitReferencesRepository.DeleteAsync(group.Id, languageUnit.Id);

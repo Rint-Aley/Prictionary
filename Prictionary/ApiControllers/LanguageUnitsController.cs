@@ -44,7 +44,7 @@ public class LanguageUnitsController : ControllerBase
         var languageUnit = await _languageUnitsRepository.GetByIdAsync(id);
         if (languageUnit is null)
             return NotFound();
-        if (!_languageUnitsAccessChecker.CanRead(languageUnit, user.Id))
+        if (!await _languageUnitsAccessChecker.CanReadAsync(languageUnit, user.Id))
             return StatusCode(405);
         var response = new LanguageUnitResponse
         {
@@ -69,7 +69,7 @@ public class LanguageUnitsController : ControllerBase
         var languageUnit = await _languageUnitsRepository.GetByIdAsync(id);
         if (languageUnit is null)
             return NotFound();
-        if (!_languageUnitsAccessChecker.CanChange(languageUnit, user.Id))
+        if (!await _languageUnitsAccessChecker.CanChangeAsync(languageUnit, user.Id))
             return StatusCode(405);
         await _languageUnitsRepository.UpdateAsync(languageUnit.Id, newValues);
 

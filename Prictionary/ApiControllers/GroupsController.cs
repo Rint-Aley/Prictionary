@@ -115,7 +115,7 @@ public class GroupsController : ControllerBase
         var group = await _groupsRepository.GetByIdAsync(groupId);
         if (group is null)
             return NotFound();
-        if (!_groupAccessChecker.CanRead(group, user.Id))
+        if (!await _groupAccessChecker.CanReadAsync(group, user.Id))
             return StatusCode(405);
         var response = new GroupResponse
         {
@@ -140,7 +140,7 @@ public class GroupsController : ControllerBase
         var group = await _groupsRepository.GetByIdAsync(groupId);
         if (group is null)
             return NotFound();
-        if (!_groupAccessChecker.CanChange(group, user.Id))
+        if (!await _groupAccessChecker.CanChangeAsync(group, user.Id))
             return StatusCode(405);
         var changeResult = await _groupsRepository.ChangeGroup(groupId, newGroup);
         if (changeResult.IsError(out var error))
@@ -162,7 +162,7 @@ public class GroupsController : ControllerBase
         var group = await _groupsRepository.GetByIdAsync(groupId);
         if (group is null)
             return NoContent();
-        if (!_groupAccessChecker.CanDelete(group, user.Id))
+        if (!await _groupAccessChecker.CanDeleteAsync(group, user.Id))
             return StatusCode(405);
         await _groupsRepository.DeleteGroupAsync(groupId);
 
@@ -182,7 +182,7 @@ public class GroupsController : ControllerBase
         var group = await _groupsRepository.GetByIdAsync(groupId);
         if (group is null)
             return NotFound();
-        if (!_groupAccessChecker.CanRead(group, user.Id))
+        if (!await _groupAccessChecker.CanReadAsync(group, user.Id))
             return StatusCode(405);
         var wordsIds = await _groupsRepository.GetWordsIdsAsync(groupId);
 

@@ -2,7 +2,7 @@
 
 namespace Prictionary.ViewModels.Requests;
 
-public class CreateLanguageUnitRequest
+public record CreateLanguageUnitRequest
 {
     [Required]
     public required string Content { get; set; }

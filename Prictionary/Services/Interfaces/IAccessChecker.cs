@@ -6,9 +6,9 @@
 /// <typeparam name="T">Type</typeparam>
 public interface IAccessChecker<T>
 {
-    public bool CanRead(T resource, string userId);
+    public Task<bool> CanReadAsync(T resource, string userId, CancellationToken cancellationToken = default);
 
-    public bool CanChange(T resource, string userId);
+    public Task<bool> CanChangeAsync(T resource, string userId, CancellationToken cancellationToken = default);
 
-    public bool CanDelete(T resource, string userId);
+    public Task<bool> CanDeleteAsync(T resource, string userId, CancellationToken cancellationToken = default);
 }

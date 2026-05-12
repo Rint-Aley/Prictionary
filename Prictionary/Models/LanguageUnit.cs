@@ -17,7 +17,7 @@ public class LanguageUnit
 
     public List<LanguageUnitGroup> LanguageUnitGroups { get; set; } = [];
 
-    DateTime CreatedAt { get; set; }
+    public DateTime CreatedAt { get; private set; }
 
-    DateTime LastModifiedAt { get; set; }
+    public DateTime LastModifiedAt { get; private set; }
 }

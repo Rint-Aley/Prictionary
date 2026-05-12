@@ -39,6 +39,6 @@ public class LanguageUnitsAccessChecker : IAccessChecker<LanguageUnit>
     {
         return _dbContext.LanguageUnitGroups
             .Include(lug => lug.Group)
-            .AnyAsync(lug => lug.LanguageUnitId == resource.Id && lug.Group.UserId == userId, cancellationToken);
+            .AnyAsync(lug => lug.LanguageUnitId == resource.Id && lug.Group.OwnerId == userId, cancellationToken);
     }
 }

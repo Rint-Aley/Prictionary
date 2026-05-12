@@ -49,8 +49,8 @@ public class GroupsController : ControllerBase
         {
             Name = createGroupRequest.Name,
             Description = createGroupRequest.Description,
-            User = user,
-            UserId = user.Id,
+            Owner = user,
+            OwnerId = user.Id,
         };
         var repositoryResult = await _groupsRepository.CreateGroupAsync(newGroup);
         if (repositoryResult.IsError(out RepositoryError error))

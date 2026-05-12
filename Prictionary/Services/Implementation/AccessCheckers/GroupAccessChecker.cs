@@ -23,5 +23,5 @@ public class GroupAccessChecker : IAccessChecker<Group>
         CancellationToken cancellationToken)
         => IsOwner(resource, userId);
 
-    private bool IsOwner(Group resource, string userId) => resource.UserId == userId;
+    private bool IsOwner(Group resource, string userId) => resource.OwnerId == userId;
 }

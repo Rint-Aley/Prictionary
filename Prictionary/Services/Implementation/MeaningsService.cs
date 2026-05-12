@@ -11,15 +11,12 @@ namespace Prictionary.Services.Implementation;
 public class MeaningsService : IMeaningsService
 {
     private readonly PrictionaryContext _dbContext;
-    private readonly IMeaningsRepository _meaningsRepository;
     private readonly IAccessChecker<Meaning> _meaningsAccessChecker;
 
     public MeaningsService(
         PrictionaryContext dbContext,
-        IMeaningsRepository meaningsRepository,
         IAccessChecker<Meaning> meaningsAccessChecker)
     {
-        _meaningsRepository = meaningsRepository;
         _meaningsAccessChecker = meaningsAccessChecker;
         _dbContext = dbContext;
     }

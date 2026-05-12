@@ -8,6 +8,12 @@ public class LanguageUnitGroup
     public Group Group { get; set; }
     public DateTime AddedAt { get; set; }
 
+    private LanguageUnitGroup()
+    {
+        LanguageUnit = null!;
+        Group = null!;
+    }
+
     public LanguageUnitGroup(LanguageUnit languageUnit, Group group)
     {
         LanguageUnit = languageUnit;

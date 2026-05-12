@@ -1,4 +1,6 @@
-﻿using Prictionary.Models;
+﻿using FluentValidation;
+using Prictionary.DTOs;
+using Prictionary.Models;
 using Prictionary.Repositories.Implementions;
 using Prictionary.Repositories.Interfaces;
 using Prictionary.Services.Implementation;
@@ -22,10 +24,12 @@ public static class ServicesExtensions
             services.AddScoped<IAccessChecker<LanguageUnit>, LanguageUnitsAccessChecker>();
             services.AddScoped<IAccessChecker<Meaning>, MeaningsAccessChecker>();
 
-            services.AddScoped<IGroupsRepository, IGroupsRepository>();
+            services.AddScoped<IGroupsRepository, GroupsRepository>();
             services.AddScoped<ILanguageUnitsRepository, LanguageUnitsRepository>();
             services.AddScoped<IGroupLanguageUnitReferencesRepository, GroupLanguageUnitReferencesRepository>();
             services.AddScoped<IMeaningsRepository, MeaningsRepository>();
+
+            services.AddScoped<AbstractValidator<CredentialsForm>, CredentialsFormValidator>();
 
             return services;
         }

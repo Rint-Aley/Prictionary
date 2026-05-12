@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Prictionary.Configuration;
 using Prictionary.Models;
@@ -18,12 +19,12 @@ public class JwtService : IJwtService
 
     public JwtService(
         UserManager<AppUser> userManager,
-        AuthPolicy authPolicy,
-        Secrets secrets)
+        IOptions<AuthPolicy> authPolicy,
+        IOptions<Secrets> secrets)
     {
         _userManager = userManager;
-        _authPolicy = authPolicy;
-        _secrets = secrets;
+        _authPolicy = authPolicy.Value;
+        _secrets = secrets.Value;
     }
 
     public async Task<(string, string)> GetAccessAndRefreshTokensAsync(AppUser user)

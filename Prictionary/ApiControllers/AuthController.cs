@@ -1,6 +1,7 @@
 ﻿using Asp.Versioning;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 using Prictionary.Configuration;
 using Prictionary.DTOs;
 using Prictionary.Models;
@@ -23,16 +24,16 @@ public class AuthController : ControllerBase
     public AuthController(
         SignInManager<AppUser> signInManager,
         IUserAuthService userAuthService,
-        AuthPolicy authPolicy)
+        IOptions<AuthPolicy> authPolicy)
     {
         _signInManager = signInManager;
         _userAuthService = userAuthService;
-        _authPolicy = authPolicy;
+        _authPolicy = authPolicy.Value;
     }
 
     [HttpPost("login")]
     [MapToApiVersion("0")]
-    public async Task<IActionResult> LogIn([FromBody] CredentialsForm credentials, CredentialsFormValidator validator)
+    public async Task<IActionResult> LogIn([FromBody] CredentialsForm credentials, [FromServices] CredentialsFormValidator validator)
     {
         if (!validator.Validate(credentials).IsValid)
         {
